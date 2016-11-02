@@ -617,3 +617,80 @@ for (Some(fruit) <- results) println(fruit) // Will print "apple" and "orange"
 ```
 
 #Chapter 16: Working with Lists
+Lists in scala are immutable (elements cannot be reassigned), lists have a recursive structure (arrays are flat). List are covariante, this means that if T is subtype of S, then `List[T]` is a subtype of `List[S]`. All lists are build from _Nil_ (which represents the empty list) and _::_ which represent a list who's first element is the one on the left of the operator followed by the elements of the right operator. i.e we can build a list containing the first two natural numbers as `1::(2::Nil)` or `1::2::3` (concatenates to the right). All operations on Lists can be expressed in terms of the following methods defined in the List class:
+
+* head returns the first element of a list (for non empty list, Exception is thrown otherwise)
+* tail returns a list consisting of all elements except the first (for non empty list, Exception is thrown otherwise)
+* isEmpty returns true if the list is empty
+
+It is possible to use pattern match with list using a patter like _List(...)_ or to match parts of the lists using _::_ and _Nil_. i.e. the patter _a::b::rest_ matches lists that has at least 2 elements.
+
+####First order (methods that does not take functions as arguments) methods in the class List:
+
+* Concatenation: written as _:::_ it takes two lists as operands and returns a new List containing the elements of the left operand followerd with the right hand operand elements. As _::_, _:::_ concatenates to the right.
+* Length: `List(3,4,5).length`, similar to java. Although this is an expensive operation who's cost is proportional to the size of the list.
+* Init and Last: returns the first and last element of a list. Throws exception if the list is empty. This operation cost is proportional to the list size.
+* Reverse: Reverses the order of the elements of a lists. As Lists are immutable, it returns a new one.
+* take: `List(1,2,3).take(2)` returns a `List(1,2)`. `List(1,2,3).take(6)` returns a `List(1,2,3)`
+* drop: `List(1,2,3).drop(2)` returns a `List(3)`
+* splitAt: `List(1,2,3).splitAt(2)` returns `(List(1,2), List(3))`
+* apply: `List(1,2,3).apply(2)` returns `2`
+* zip: takes two lists and returns a List containing pairs like `(x0,y0), (x1,y1)...` the method zipWithIndex would zip every element with its index.
+* toString and mkString: the toString returns the canonical representation of the list, mkstring(pre, sep, post) will return the elements of the list separated with the op element, prefixed with the pre element and postfixed with the post element. `abcde mkString ("[", ",", "]")` returns `[a,b,c,d,e]`
+* toArray: converts the list in an Array. toList would to the opposite in the Array class.
+* copyToArray: this methods accepts an Array, and an integer. This would copy the list in the array passed starting at the position defined by the integer.
+* elements: returns an iterator of the list 
+
+####Higher order methods in the class List:
+
+* map: Takes a function and applies it to all elements on the list:
+* flatMap: similar to map but it takes a function returning a list of elements, it applies the function to all elements and returns the concatenation of the results.
+* foreach: similar to map but it takes a function that returns unit and it applies it to all the members of the list, returning a unit.
+* filter: receives a function `T => Boolean`. If the function returns false then the element is filter out.
+* partition: similar to filter but it returns a pair of lists, one with the elements that returned true and the other with the elements that returned false.
+* find: similar to filter but returns the first elements that satisfies the predicate. Returns an `Option` value.
+* takeWhile: The operation xs takeWhile p takes the longest prefix of list xs such that every element in the prefix satisfies p. `List(1, 2, 3, -4, 5) takeWhile (_ > 0) //returns List(1,2,3)`
+* dropWhile: The operation xs takeWhile p drops the longest prefix of list xs such that every element in the prefix satisfies p.
+* span: a combination of the previous two. xs span p equals (xs takeWhile p, xs dropWhile p). 
+* forall: xs forall p is returns true if all elements in xs satisfy p:( T => Boolean)
+* Folding lists: the `/:` operator combines the elements of a list with some operator `(0 /: xs) (_ + _) // equivalent to 0 + xs1 + xs2 + ...`. IThe fold left operation is defined as `(z /: List(a, b, c)) (op) equals op(op(op(z, a), b), c)`. In a similar manner, the `\:` operator is defined as `List(a, b, c) :\ z) (op) equals op(a, op(b, op(c, z)))`
+* sort: 
+
+####Methods of the list object (The ones defined in the companion object of the class List):
+
+* apply: Takes a collection of numbers and returns a list. `List(1,2) // List[Int]`
+* range: Creates a List containing a range of numbers `List.range(1,4) //returns a List(1,2,3)`. It also accepts a defined step `List.range(1,9,2) //resturns List(1,3,5,7)`
+* make: `List.make(x:Int, y:Object)` creates a uniform list with x number of y objects on it.
+* unzip: Takes a list of pairs and returns a pair of lists one with the `_.1` elements and the second with the `_.2` elements.
+* flatten:takes a list of lists and concatenates all element lists of the main list.
+* concat: Concatenates the element lists that are given directly as repeated parameters `List.concat(List(a,b), List(c)) // return List (a,b,c)`
+* map2: Takes two lists and a function that maps two elements values to a result `List.map2(List(10, 20), List(3, 4, 5)) (_ * _) //return List(30,80)`
+* forall2: similar to the previous `List.forall2(List("abc", "de"), List(3, 2)) (_.length == _) //returns true`
+* exists2: similar to the previous `List.exists2(List("abc", "de"),List(3, 2)) (_.length != _) // returns false`
+
+#Chapter 17: Collections
+The main trait in scala collections is Iterable, which defines a method `def elements :Iterator[A]`. The Iterator is the mechanism to iterate the Iterable collections. An Iterator can be traversed only once. The Iterator has the methods `def hasNext:Boolean` and `def next:A`.
+The trait Seq extends from Iterable, their elements are order and can be requested (for example access the 4th element).
+
+####Sequences
+* Lists: Not efficient in accessing random positions as it has to iterate until that position, works well for iterations
+* Arrays: Good for accessing arbitrary positions.
+* List Buffers: Suitable for appending to the tail or head of the List. provides constant time append (with the `+=` operator) and prepend (with the `+:` operator) operations. A `scala.collections.mutable.ListBuffer` can return a List if the method `toList` is invoked.
+* Array Buffers: Like an array, except that you can additionally add and remove elements from the beginning and end of the sequence. Available as `scala.collection.mutable.ArrayBuffer`
+* Queues: for FIFO collections in two flavours mutable and immutable. To append an element or a List of element to an immutable queue the method `enqueue` is provided with overloaded signature. To remove an element from the head of the queue the method `dequeue` is provided, this method returns a pair with the element at the head and the rest of the queue with the element removed. On mutable queues, the method `+=` serves to append an element, the `++=` to append a list, and the `dequeue` will just remove the element from the head and return it.
+* Stacks: For a LIFO collection, also mutable and Immutable. `pop` To extract an element, `top` to get the head element without removing it and `push` to add it.
+* RichString: it is a `Seq[Char]`, there is an implicit conversion between string in the predef object.
+
+####Sets and Maps
+* Sets: Collection that ensures that at most one of each object, as determined by ==, will be contained in the set at any one time. 
+* Maps: To associate a value with each element of a collection.
+* SortedSet: Collections that has an iterator which returns elements in a particular order. Implemented by the TreeSet, needs elements that implements the trait Ordered or an implicit is available to convert the elements.
+* SortedMap: similar to the SortedSet, implemented by the TreeMap, and ordered accorded to the keys.
+* Synchronized sets and maps: It is possible to create a synthetic synchronized map class like this:
+    - `new HashMap[String, String] with SynchronizedMap[String, String]`
+    - `new mutable.HashSet[Int] with mutable.SynchronizedSet[Int]`
+
+Scala would interpret the `a+=b` method in immutable collections (which does not support this method) as `a=a+b`. I f you declare a set as a var and use a += on it, then a new collection with the element will be returned and the var pointer will be reassigned. The same applies to methods ending in `=`.
+Sometimes you may want to create a collection but specify a different type from the one the compiler would choose, this can be done by defining the type when you define the collection like in `val init=mutable.Set[Int](43)`, or adding the elements of a set to the type of set you want like in `val treeSet = TreeSet[String]() ++ colors //colors is a Set`. Initializing Lists from other collections is easier (just call toList), same for Arrays with the toArray metho, it can be slow for large collections as elements will be copied using the Iterator. You can convert a mutable collection to an immutable collection and viceversa by invoking the ++ method on an empty collection of the desired type and adding the elements of the mutable/immutable collection to it.
+ 
+Tuples can combine objects of different types, thus tuples do not inherit from Iterable. 
