@@ -8,7 +8,7 @@ class Chapter16 {
   def reverseList[T](x:List[T]):List[T] ={
     x match {
       case List() => x
-      case x1::xl => reverseList(xl):::x1
+      case x1::xl => reverseList(xl).::(x1)
     }
   }
 

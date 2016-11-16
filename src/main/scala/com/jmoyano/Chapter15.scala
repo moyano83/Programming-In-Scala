@@ -15,9 +15,9 @@ class Chapter15 {
     case e: Seq[Any] => s"${e.length}"
     case _ => "?"
   }
-  def getSomeValue(e:Some[String]) : String = e match{
-    case Some(x) => x
-    case None => "?"
+  def getSomeValue(e:Some[String]) : Option[String] = e match{
+    case Some(x) => Some(x)
+    case _ => None
   }
   val getInstanceObject = Chapter15()
 }

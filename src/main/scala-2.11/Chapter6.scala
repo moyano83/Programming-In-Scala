@@ -7,12 +7,13 @@ class Rational(n:Int, d:Int){
   require( num != null )
   val den:Int =d
   def this(x:Int) = this(x,1)
-  def +(r:Rational) = new Rational(this.num + r.n, this.den + r.den)
+  def +(r:Rational) = new Rational(this.num + r.num, this.den + r.den)
 }
+object Chapter6 {
+  implicit def intToRational(x: Int) = new Rational(x)
 
-implicit def intToRational(x: Int) = new Rational(x)
+  val a = new Rational(1, 2)
+  val b = new Rational(3, 2)
 
-val a = new Rational(1,2)
-val b = new Rational(3,2)
-
-println(3 + a + b)
+  println(3 + a + b)
+}

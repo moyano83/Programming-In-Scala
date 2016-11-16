@@ -691,6 +691,33 @@ The trait Seq extends from Iterable, their elements are order and can be request
     - `new mutable.HashSet[Int] with mutable.SynchronizedSet[Int]`
 
 Scala would interpret the `a+=b` method in immutable collections (which does not support this method) as `a=a+b`. I f you declare a set as a var and use a += on it, then a new collection with the element will be returned and the var pointer will be reassigned. The same applies to methods ending in `=`.
-Sometimes you may want to create a collection but specify a different type from the one the compiler would choose, this can be done by defining the type when you define the collection like in `val init=mutable.Set[Int](43)`, or adding the elements of a set to the type of set you want like in `val treeSet = TreeSet[String]() ++ colors //colors is a Set`. Initializing Lists from other collections is easier (just call toList), same for Arrays with the toArray metho, it can be slow for large collections as elements will be copied using the Iterator. You can convert a mutable collection to an immutable collection and viceversa by invoking the ++ method on an empty collection of the desired type and adding the elements of the mutable/immutable collection to it.
- 
-Tuples can combine objects of different types, thus tuples do not inherit from Iterable. 
+Sometimes you may want to create a collection but specify a different type from the one the compiler would choose, this can be done by defining the type when you define the collection like in `val init=mutable.Set[Int](43)`, or adding the elements of a set to the type of set you want like in `val treeSet = TreeSet[String]() ++ colors //colors is a Set`. Initializing Lists from other collections is easier (just call toList), same for Arrays with the toArray metho, it can be slow for large collections as elements will be copied using the Iterator. You can convert a mutable collection to an immutable collection and viceversa by invoking the ++ method on an empty collection of the desired type and adding the elements of the mutable/immutable collection to it. Tuples can combine objects of different types, thus tuples do not inherit from Iterable. 
+
+#Chapter 18:Stateful Objects
+In scala, every reassignable var that is a non private member of a class gets a setter (`x_=` being x the name of the var) and a setter (just `x`). The getters and setters generated has the same visibility than the original var. In addition, you can also choose to define a getter and a setter directly instead of defining a var, for example:
+
+```scala
+class Time {
+  private[this] var m = 0
+    def hour: Int = h
+    def hour_=(x: Int) { h = x }
+    def minute: Int = m
+    def minute_=(x: Int) { m = x }
+}
+```
+
+To initialize a field with a zero value that will depend on the field's type, we can use `= _`. You can define a _type member_ inside a class with the keyword *type* followed by the definition. For example `type Action = () => Boolean` defines a type Action that is a parameterless function that returns a boolean.
+
+#Chapter 19: Type Parameterization
+In Scala it is possible to hide the primary constructor by adding a private modifier in front of the class parameter list: `class Test private (...){//body}`.
+This constructor can be accessed only from within the class itself and its companion object. A class can also be hided and only export a trait that reveals the public interface of the class, like `private class <name> ...`. A parameterized type is called a type constructor because with it you can construct a type by specifying a type parameter. In Scala, generic types have by default nonvariant (or, “rigid”) subtyping, thus you can't pass a `Example[T]` to a method that needs a `Example[F]` being F subtype of T. This behaviour can be changed if you define the class like `Example[+T]`. Prefixing a formal type parameter with a + indicates that subtyping is co- variant (flexible) in that parameter. If instead you define the class like `Example[-T]`, means that the class is contravariant subtyped, meaning that if T is a subtype of type S, this would imply that `Example[S]` is a subtype of `Example[T]`. For example contravariance in a function passed as a parameter makes sense as any operation defined in that function would be accessible by a subtype of it 
+Scala treats arrays as nonvariant, so as oposite with java, you would have to cast an array of one type to its supertype using the `asInstanceOf[type]` method.
+It is possible to give a method a lower bound for a type parameter, for example given the example below, the type `U` is a supertype of the type `T`: 
+
+```scala
+class Example[+T]  {
+def method[U >: T](x: U) = {...}
+}
+```
+
+An upper bound, specified as `<:` for example in a method like `def getSortedList[T<:Ordered[T]](..)` you are specifying that `T` has to be a subtype of `Ordered[T]`.
