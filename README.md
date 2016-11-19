@@ -715,8 +715,52 @@ Scala treats arrays as nonvariant, so as opposite with java, you would have to c
 
 ```scala
 class Example[+T]  {
-def method[U >: T](x: U) = {...}
+def method[U >: T](x: U) = {...} //Accepts a type T or any of its supertypes
 }
 ```
 
 An upper bound, specified as `<:` for example in a method like `def getSortedList[T<:Ordered[T]](..)` you are specifying that `T` has to be a subtype of `Ordered[T]`.
+
+#Chapter 20: Abstract Members
+Type of Abstract members of a class:
+
+* Abstract type: type declared to be a member of a class or trait, without specifying a definition.
+* Abstract val: Gives a name and type, but no value. i.e. `val name:String`. The subclasses will give a value for the abstract member. Any implementation must be a val definition. An abstract method can be implemented by a val by a subclass, but not viceversa.
+* Abstract var: Declared like the vals, just a name and type. The reason to have abstract vars is because the come with getters and setters if declared as a member of a class definition.
+   
+Abstract vals are important in traits because they don't have constructors to pass parameters to. IF we instantiate a trait as an anonymous class, the expressions passed to initialize the abstract members are not evaluated before the instantiation of the class, but during the instantiation of the anonymoys class (after the initialization of the trait). Therefore if any requirement must be met, it may fail as the trait is evaluated with the abstract members to the default values, and then the anonymous class initializes with the expressions passed. A class parameter argument is evaluated before it is passed to the class constructor (unless the parameter is by-name). An implementing val definition in a subclass, by contrast, is evaluated only after the superclass has been initialized. There is two solutions for robust initialization:
+
+* Pre-initialized fields: The initialization section comes before the mention of the trait. Both separated by a with. i.e.:
+
+```scala
+class Example (member:Int) extends {
+member=1//initialization code
+} with TraitExample //The constructor class is initialized and made available to the trait.
+```
+
+Pre initialized fields are initialized before calling the class constructor and cannot refer to the object being constructed.
+
+* lazy vals: With the lazy modifier, the initializing expression on the right-hand side will only be evaluated the first time the val is used. A lazy val is never evaluated more than once. Lazy vals are an ideal complement to functional objects, where the order of initializations does not matter,
+
+With abstract types you can define behaviour like this:
+
+```scala
+class Food
+abstract class Animal {
+    type SuitableFood <: Food
+    def eat(food: SuitableFood)
+}
+```
+
+In scala, classes can have path dependent types, which is of the form `<instance name>.<type>`, i.e. _example.TypeExample_. Path dependent types are alias to the real types behind. Path dependent types are similar to inner classes in java, except for the fact they refer to outer objects, not outer classes. 
+Enumerations are one application of path dependent objects, in scala an enumeration is defined by extending scala.Enumeration like this:
+
+```scala
+class Color extends Enumeration{
+val Red = Value
+val Green = Value // also val Red, Green = Value will work
+}
+```
+
+Enumeration defines an inner class named Value, and the same named parameterless Value method returns a fresh instance of that class. In the above example `Red` and `Green` types are `Color.Value`. In scala, inner objects are referenced like `Outer#Inner`, the '.' is reserved for path-dependent types.
+You can neither create an instance of an abstract type, nor have an abstract type as a supertype of another class.
