@@ -764,3 +764,38 @@ val Green = Value // also val Red, Green = Value will work
 
 Enumeration defines an inner class named Value, and the same named parameterless Value method returns a fresh instance of that class. In the above example `Red` and `Green` types are `Color.Value`. In scala, inner objects are referenced like `Outer#Inner`, the '.' is reserved for path-dependent types.
 You can neither create an instance of an abstract type, nor have an abstract type as a supertype of another class.
+
+#Chapter 21: Implicit Conversions and Parameters
+Implicit conversions are normal methods prepended with the `implicit` modifier, the compiler will try to insert an implicit to fix a type error. Implicit conversions are governed by the following general rules:
+
+* Marking Rule: Only definitions marked implicit are available. You can mark a variable, function, or object definition with the `implicit` keyword, and only those definitions marked with `implicit` will be tried to fix type errors.
+* Scope Rule: An inserted implicit conversion must be in scope as a single identifier, or be associated with the source or target type of the conversion. The implicit conversion must be in scope as a single identifier, which means the compiler won't try to expand something like `someVariable.convert(x)`, but it will work if we do `import someVariable._` (as then it will be available as a single identifier). This rule has one exception, which is if we place the implicit in the companion object, the its said that we have the implicit associated with the object type.
+* Non-Ambiguity Rule: An implicit conversion is only inserted if there is no other possible conversion to insert.
+* One-at-a-time Rule: Only one implicit is tried. For sanity’s sake, the compiler does not insert further im- plicit conversions when it is already in the middle of trying another implicit.
+* Explicits-First Rule: Whenever code type checks as it is written, no implicits are attempted. The compiler will not change code that already works.
+* Naming an implicit conversion: The name of an implicit conversion matters only in two situations: if you want to write it explicitly in a method application, and for determining which implicit conversions are available at any place in the program. If you only want to import a particular implicit in a class, you can do so by `import <Class>.<implicit method name>`.
+
+There are three places implicits are used in the language:
+
+### Implicit conversion to an expected type.
+The rule is whenever the compiler needs a type X but has type Y, it looks for an implicit to convert Y to X. The compiler will look for available implicits in scope to avoid a compiler error. The scala.Predef object, which is implicitly imported into every Scala program, defines implicit conversions that convert “smaller” numeric types to “larger” ones.
+
+###Converting the receiver
+Implicit conversions also apply to the receiver of a method call, which serves to interoperate with new types and to define new domain specific languages. For example in a map `Map("key" -> "value)`, the `->` is a method of the class `ArrowAsoc` in the package `scala.Predef`. Whenever you see someone calling methods that appear not to exist in the receiver class, they are probably using implicits.
+
+###Implicit parameters
+Implicits in parameter lists are of the form replace `someCall(a)` with `someCall(a)(b)`, thereby adding a missing parameter list to complete a function call. It is the entire last curried parameter list that’s supplied, not just the last parameter.  You can define an implicit parameter to a method call like:
+
+```scala
+object Greeter {
+    def greet(name: String)(implicit prompt: PreferredPrompt) {
+      println("Welcome, "+ name +". The system is ready." + prompt.preference) // The method can still be called like Greeter.greet("Bob")(bobsPrompt)
+    }
+}
+```
+
+You can then define something like `object JoesPrefs {implicit val prompt = new PreferredPrompt("Yes, master> ")}`, and then import the implicit as single identifier using `import JoesPref._`. With this implicit on scope, you can make a call like `Greeter.greet("Bob")` and it will work. As said, the compiler can pass an entire parameter list, not a single argument. Because the compiler selects implicit parameters by matching types of parame- ters against types of values in scope, implicit parameters usually have “rare” or “special” enough types that accidental matches are unlikely. As a style rule, it is best to use a custom named type in the types of implicit parameters.
+Implicit parameters are not usually called by name in the code of the methods, the programmers usually lets the compiler to complete the methods. Scala provides a convenience to shortened the methods called view bounds:
+`def maxList[T](elements: List[T])(implicit orderer: T => Ordered[T]): T ={...}` becomes `def maxList[T <% Ordered[T]](elements: List[T]): T ={...}`. Where `T <% Ordered[T]` means that T can be threated as `T` or as `Ordered[T]`. This is different from an upper bound (`<:`) as in `T<:Ordered[T]`, `T` _is_ an `Ordered[T]`.
+ 
+When debugging implicits, if the compiler doesn't find an implicit, write the conversion explicitly to see if that indicates an Error (i.e. `val chars:List[Char] = str2CharList("abc")`). In this case the compiler might tell you the return type is wrong, or if the error goes away might be due to an scope problem. Also the `-Xprint:typer` option to the compiler displays useful information about the implicits used. 
