@@ -10,7 +10,6 @@ class Chapter18 {
 object TestChapter18{
   def main(args:Array[String]) = {
     val chapter = new Chapter18
-    chapter.testVar
     println (chapter.testVar)
   }
 }

@@ -837,3 +837,21 @@ def :::[U >: T](prefix: List[U]): List[U] =
 List buffers let you accumulate the elements of a list. To do this, you use an operation such as “buf += elem”, which appends the element elem at the end of the list buffer buf. After appending all elements, you can create a list by calling the `toList` method of the list buffer. ListBuffer is a class in package scala.collection.mutable. (+=) and the `toList` method of list buffer takes constant time. In scala lists, you can either construct lists incrementally by adding elements to the beginning of a list using ::, or you use a list buffer for adding elements to the end.
 
 #Chapter 23: For Expressions Revisited
+All for expressions that yield a result are translated by the compiler into combinations of invocations of the higher-order methods map, flatMap, and filter. All for loops without yield are translated into a smaller set of higher-order functions: just filter and foreach. A for sequence is composed of:
+ 
+* Generators: Of the form `pat <- expr` where `expr` typically returns a list, and pat is a pattern to match with. Every for expression starts with a generator. If there are several genera- tors in a for expression, later generators vary more rapidly than earlier ones.
+* Definitions: Of the form `pat=expr`.
+* Filters: Of the form `if expr`, drops the elements that doesn't match the condition.
+
+Every for expression can be translated in terms of the three higher-order functions map, flatMap and filter:
+
+* for expressions with one generator: `for (x <- expr1) yield expr2` is translated to `expr1.map(x => expr2)`
+* for expressions starting with a generator and a filter: `for (x <- expr1 if expr2) yield expr3` is translated to `expr1 filter (x => expr2 ) map (x => expr3 )`
+* for expressions starting with two generators: `for (x <- expr1; y <- expr2; seq) yield expr3` is translated to `expr1.flatMap(x => for (y <- expr2; seq) yield expr3)`
+* Translating patterns in generators: `for (pat <- expr1) yield expr2` is translated to `expr1 filter { case pat => true case _ => false} map { case pat => expr2}`. A pattern-matching generator will never throw a MatchError.
+* Translating definitions: `for (x <- expr1; y = expr2; seq) yield expr3` is translated to `for ((x, y) <- for (x <- expr1) yield (x, expr2); seq) yield expr3`.
+* for loops without return: `for (x <- expr1) body` translates to `expr1 foreach (x => body)`
+
+In the same sense, the operations map, flatmap and filter can be implemented it for. To support the full range of for expressions and for loops, you need to define map, flatMap, filter, and foreach as methods of your data type. 
+
+#Chapter 24: Extractors
