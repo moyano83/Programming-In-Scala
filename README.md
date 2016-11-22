@@ -798,4 +798,42 @@ You can then define something like `object JoesPrefs {implicit val prompt = new 
 Implicit parameters are not usually called by name in the code of the methods, the programmers usually lets the compiler to complete the methods. Scala provides a convenience to shortened the methods called view bounds:
 `def maxList[T](elements: List[T])(implicit orderer: T => Ordered[T]): T ={...}` becomes `def maxList[T <% Ordered[T]](elements: List[T]): T ={...}`. Where `T <% Ordered[T]` means that T can be treated as `T` or as `Ordered[T]`. This is different from an upper bound (`<:`) as in `T<:Ordered[T]`, where `T` _is_ an `Ordered[T]`.
  
-When debugging implicits, if the compiler doesn't find an implicit, write the conversion explicitly to see if that indicates an Error (i.e. `val chars:List[Char] = str2CharList("abc")`). In this case the compiler might tell you the return type is wrong, or if the error goes away might be due to an scope problem. Also the `-Xprint:typer` option to the compiler displays useful information about the implicits used. 
+When debugging implicits, if the compiler doesn't find an implicit, write the conversion explicitly to see if that indicates an Error (i.e. `val chars:List[Char] = str2CharList("abc")`). In this case the compiler might tell you the return type is wrong, or if the error goes away might be due to an scope problem. Also the `-Xprint:typer` option to the compiler displays useful information about the implicits used.
+
+#Chapter 22: Implementing Lists
+List is an abstract class in the package scala with two subclasses for :: and Nil. The class List is defined as `abstract class List[+T]` which means is covariant, so you can assign a `List[Int]` to a `List[Any]`. The list class defines three abstract methods:
+```scala
+def isEmpty: Boolean
+def head: T
+def tail: List[T]
+```
+From which all the methods in list can be implemented.
+
+* Nil Object: Defines an empty list. `isEmpty` returns always true and the `head` and `tail` method returns a NoSuchElementException.
+* :: Object: The cons class represents a non-empty list. It is constructed with a head element an a tail list, which are returned by the `head` and `tail` methods.
+
+```scala
+final case class ::[T](hd: T, tl: List[T]) extends List[T] {
+    def head = hd
+    def tail = tl
+    override def isEmpty: Boolean = false
+}
+```
+
+Because the methods `scala.::` and `scala.:::` ends in a colon, they are bound to the right operand, such as s::d is treated as d.::s. This method is defined as:
+
+```scala
+def ::[U >: T](x: U): List[U] = new scala.::(x, this)
+``` 
+
+so we can always use `::` to add a superclas of the current list to the list, returning a list of the superclass type. The method `:::` is defined as:
+
+```scala
+def :::[U >: T](prefix: List[U]): List[U] =
+    if (prefix.isEmpty) this
+    else prefix.head :: prefix.tail ::: this
+```
+
+List buffers let you accumulate the elements of a list. To do this, you use an operation such as “buf += elem”, which appends the element elem at the end of the list buffer buf. After appending all elements, you can create a list by calling the `toList` method of the list buffer. ListBuffer is a class in package scala.collection.mutable. (+=) and the `toList` method of list buffer takes constant time. In scala lists, you can either construct lists incrementally by adding elements to the beginning of a list using ::, or you use a list buffer for adding elements to the end.
+
+#Chapter 23: For Expressions Revisited

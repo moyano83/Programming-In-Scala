@@ -1,5 +1,5 @@
 package com.jmoyano
-
+import scala.::
 /**
   * Created by jm186111 on 15/11/2016.
   */
