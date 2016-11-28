@@ -855,3 +855,46 @@ Every for expression can be translated in terms of the three higher-order functi
 In the same sense, the operations map, flatmap and filter can be implemented it for. To support the full range of for expressions and for loops, you need to define map, flatMap, filter, and foreach as methods of your data type. 
 
 #Chapter 24: Extractors
+Scala extractors let you define new patterns for preexisting types, where the pattern need not follow the internal representation of the type. An extractor in Scala is an object that has a method called unapply as one of its members. `unapply` match a value and take it apart.
+ 
+ ```scala
+ object EMail {
+   def unapply(str: String): Option[(String, String)] = {
+     val parts = str split "@"
+     if (parts.length == 2) Some(parts(0), parts(1)) else None
+   } 
+ }
+```
+
+When a pattern is matched against an extractor, it invokes the `unapply` method and it returns either `Some(...)` or `None`, in which case the pattern matching will try the next pattern (or fails with a MatchError if there is none). The variable against which the extractor is matches can be of any type (it is casted to the argument of the `unapply` method). If an injection method is included, it should be the dual to the extraction method. For instance, a call of:
+`EMail.unapply(EMail.apply(user, domain))` should be equal to  `Some(user, domain)`, although this condition is not enforced by scala.
+
+In case a pattern in unapply does not bind any value, the method returns a boolean indicating success or failure. It is still possible to associate a variable with the whole pattern matched by it, to do so, we write the name of the variable followed by `@` and the pattern. i.e. `x @ patternExpression()`.
+An Extractor can support vararg matching, to handle this case, Scala lets you define a different extraction method called `unapplySeq` specifically for vararg matching.i.e:
+
+```scala
+  object Domain {
+    // The injection method (optional)
+    def apply(parts: String*): String =
+      parts.reverse.mkString(".")
+      
+    // The extraction method (mandatory)
+    def unapplySeq(whole: String): Option[Seq[String]] =
+      Some(whole.split("\\.").reverse)
+}
+```
+
+The return type of `unapplySeq` must be `Option[Seq[T]]`, It’s also possible to return some fixed elements from an unapplySeq together with the variable part. This is expressed by returning all elements in a tuple, where the variable part comes last. Extractors enable patterns that have nothing to do with the data type of the object that’s selected on. This property is called _representation independence_ and provides independence (decoupling) between the pattern match and the instance type. If you write code for a closed application, case classes are usu- ally preferable because of their advantages in conciseness, speed and static checking. But if you need to expose a type to unknown clients, extractors might be preferable because they maintain representation independence.
+
+Scala’s regular expression class resides in package `scala.util.matching`, a new regular expression value is created by passing a string to the Regex constructor.
+ `val Decimal = """(-)?(\d+)(\.\d*)?""".r` gives you a regular expression, this is possible because there is a method named `r` in class RichString, which converts a string to a regular expression. Regex classes in scala gives several methods to deal with regular expressions:
+ 
+* `regex findFirstIn str`: Finds first occurrence of regular expression regex in string str, returning the result in an Option type.
+* `regex findAllIn str`: Finds all occurrences of regular expression regex in string str, return- ing the results in an Iterator.
+* `regex findPrefixOf str`: Finds an occurrence of regular expression regex at the start of string
+   str, returning the result in an Option type.
+   
+Every regular expression in Scala defines an extractor. The extractor is used to identify substrings that are matched by the groups of the regular expression.i.e.
+`val Decimal(sign, integerpart, decimalpart) = "-1.23" //matches sign="-", integerpart="1", decimalpart=".23"`
+ `val Decimal(sign, integerpart, decimalpart) = "1.0" //matches sign=null, integerpart="1", decimalpart=".0"`
+You can use regex in for loops like this: `for (Decimal(s, i, d) <- Decimal findAllIn input)`
