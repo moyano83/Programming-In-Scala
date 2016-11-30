@@ -912,3 +912,59 @@ Some Standard annotations in scala:
 * @unchecked: It tells the compiler not to worry if the match expression in a pattern match seems to leave out some cases.
 
 #Chapter 26: Working with XML
+Scala lets you type in XML as a literal anywhere that an expression is valid. The resul would be of type `scala.xml
+.Elem`, other important classes in xml are:
+
+* Node: Abstract superclass of all XML elements.
+* Text: Class holding text inside a tag.
+* NodeSeq: Sequence of nodes.
+
+Scala allows you to insert scala code inside the xml code with curly braces `{}`. For example:
+`<a> { if (yearMade < 2000) <old>{yearMade}</old> else xml.NodeSeq.Empty}</a>`
+If the expression result to an scala type, it is converted to string before being inserted. To escape a curly brace 
+inside an XML, simply duplicate the curly brace.
+Some relevant methods in XML:
+
+* `xmlElement.text`: To retrieve the text within the node
+* Extracting subelements: to retrieve an element "b" inside a node, we call the method `\ "b"`. To do a deep search 
+(elements within elements) use `\\` instead.
+* Extracting attributes: use `\ @ "attributeName`. i.e. `<a><b color="red">text</b></a> \ "b" \ @ "color" // would 
+return red`.
+
+Using the previous example, we can write a deserializer like this:
+
+```scala
+def from XML(nodeElement:scala.xml.Node) : SomeClass = {
+  val a =  nodeElement \ "a"
+  val b = nodeElement \\ "b"
+  val colorB = (nodeElement \\ "b" \@ "color").text
+}
+```
+
+To convert xml to a file of bytes we can use the `scaveFull` method, which as opposite of the `toString` method, 
+keeps track of the encoding used:
+
+* serialization: `scala.xml.XML.saveFull("file.xml", node, "UTF-8", true, null)`
+* deserialization: `xml.XML.loadFile("therm1.xml") //no encoding passed`
+
+In pattern matching with xml if you insert a {} escape, then the code inside the {} is not an expression but a 
+pattern:
+
+```scla
+   node match {
+      case <a>{contents}</a> => "It's an a: "+ contents
+      case <b>{contents @ _*}</b> => "It's a b: "+ contents
+      case _=> "Other thing"
+   }
+```
+
+If you want to match any sequence of nodes inside a pattern, the pattern for “any sequence” of XML nodes is written 
+`_*`, represented in the case for the "b" element. You can combine this syntax with for loops:
+
+```scala
+    catalog match {
+        case <catalog>{therms @ _*}</catalog> =>
+          for (prod @ <product>{_*}</product>  <-  therms)
+            println("processing: " + (prod \ "description").text)
+    }
+```
