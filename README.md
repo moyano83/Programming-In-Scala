@@ -898,3 +898,17 @@ Every regular expression in Scala defines an extractor. The extractor is used to
 `val Decimal(sign, integerpart, decimalpart) = "-1.23" //matches sign="-", integerpart="1", decimalpart=".23"`
  `val Decimal(sign, integerpart, decimalpart) = "1.0" //matches sign=null, integerpart="1", decimalpart=".0"`
 You can use regex in for loops like this: `for (Decimal(s, i, d) <- Decimal findAllIn input)`
+
+#Chapter 25: Annotations
+A tool that uses annotations (called meta-programming tool), can use annotations to perform different routines such as pretty printing, formatting... Annotations are of the form `@Annotation [val|var|def|class|object|trait|type] ...` and applies to the entire declaration of what follows it. They can apply to expressions as in `(e: @unchecked) match {...}`, and they can take arguments `@serial(1234) SomeClass`. 
+Some Standard annotations in scala:
+
+* @deprecated: Indicates that the code marked with it will be removed in the future. Emits a warning message to the developers using the code.
+* @volatile: It informs the compiler that the variable in question will be used by multiple threads.
+* @serializable: Indicates a class is binary serializable. By default, a class is not considered serializable.
+* @SerialVersionUID(number): The serialize framework should store the number passed along with the serialized class. When you later reload that byte stream and try to convert it to an object, the framework can check that the current version of the class has the same version number as the version in the byte stream.
+* @transient: The field annotated with this is not serialized at all. When the object is loaded, the field will be restored to the default value for the type of the field annotated as @transient.
+* @scala.reflect.BeanProperty: If you add this annotation to a field, the compiler will automatically generate get and set methods for you. The generated get and set methods are only available after a compilation pass completes, you cannot call these get and set methods from code you compile at the same time as the annotated fields.
+* @unchecked: It tells the compiler not to worry if the match expression in a pattern match seems to leave out some cases.
+
+#Chapter 26: Working with XML
