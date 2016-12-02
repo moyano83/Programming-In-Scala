@@ -941,7 +941,7 @@ def from XML(nodeElement:scala.xml.Node) : SomeClass = {
 }
 ```
 
-To convert xml to a file of bytes we can use the `scaveFull` method, which as opposite of the `toString` method, 
+To convert xml to a file of bytes we can use the `saveFull` method, which as opposite of the `toString` method, 
 keeps track of the encoding used:
 
 * serialization: `scala.xml.XML.saveFull("file.xml", node, "UTF-8", true, null)`
@@ -950,7 +950,7 @@ keeps track of the encoding used:
 In pattern matching with xml if you insert a {} escape, then the code inside the {} is not an expression but a 
 pattern:
 
-```scla
+```scala
    node match {
       case <a>{contents}</a> => "It's an a: "+ contents
       case <b>{contents @ _*}</b> => "It's a b: "+ contents
@@ -970,3 +970,103 @@ If you want to match any sequence of nodes inside a pattern, the pattern for “
 ```
 
 # Chapter 27: Modular Programming Using Objects
+Programs can be divided into singleton objects, which you can think of as modules:  if a module is an object, then a template for a module is a class. Abstract classes can help to modularize the code by provide common code implementation while allowing the developer to define an specialization of some methods or properties inside the classes that extends from it.
+Scala provides the _self type_ for the situation where a trait is located in a different trait from the one that uses it, so it is out of scope. Technically, a self type is an assumed type for this whea  never this is mentioned within the class. If you have a trait that is only ever used when mixed in with another trait or traits, then you can specify that those other traits should be assumed. For example:
+
+```scala
+trait SimpleExample {
+    this: SelfTypeTraitExample =>
+    object ExampleObject (
+      SomeObjectInsideSelfTypeTraitExample
+    )
+  }
+```
+
+In the above example, the reference to the object `SomeObjectInsideSelfTypeTraitExample` is thought of as `this.SomeObjectInsideSelfTypeTraitExample`.
+Sometimes, you may encounter a case where two types are the same but the compiler can’t verify it. You can often fix 
+the problem using singleton types, which are defined like this `val someVal: example.type = example`. The “.type” on 
+the end means that this is a singleton type.  A singleton type is extremely specific and holds only one object, in 
+this case, whichever object is referred to by _example_.
+
+# Chapter 28: Object Equality
+In Scala, object equality is tested with `==` and reference equality with `eq`. By default, `==` in Scala is 
+inherited from the class `Any`, which defines the `equals` method with reference equality, therefore `==` is the same
+ than `eq`. Some of the common pitfalls when implementing the equals method are:
+ 
+* Defining equals with the wrong signature: The correct signature is `def equals(other: Any): Boolean`.
+* Changing equals without also changing hashCode: The hashcode and equals contract is the same than in java.
+* Defining equals in terms of mutable fields: If you define equals in terms of variable fields, the object can have an unexpected behavior once added to a collection. If you put such objects into collections, you have to be careful never to modify the depended-on state, and this is tricky.
+* Failing to define equals as an equivalence relation: The equals method is reflexive for non-null objects `x.equals
+(x)==true`, symmetric, transitive (if x=y and y=z then x=z), consistent, `x.equals(null)` with `x!=null` should always return 
+false. It is possible to define a correct implementation of the object equality that also works with superclasses by explicitly state that objects of this class are never equal to objects of some superclass that implement a different equality method. To do so, you can implement:
+
+```scala
+def canEqual(other: Any): Boolean 
+```
+
+The method should return true if the other object is an instance of the class in which canEqual is (re)defined, false
+ otherwise, for example:
+  
+```scala
+def canEqual(other: Any) = other.isInstanceOf[MyClass]
+```
+
+When implementing equal methods for typed classes, remember that the type is erased and won't be able at runtime. You
+ can pattern match the collection with something like `case Example[t] => ...` where the type `t` in lowercase 
+ represent any type (it can also be represented like `case Example[_] => ...`). 
+ 
+Some advices to write a correct implementation of the equals method:
+
+* Consider create a `canEqual` method in non final classes.
+* The canEqual method should yield true if the argument object is an instance of the current class.
+* The argument to the `equals` method should be `Any`
+* Write the body of the equals method as a single match expression. The match expression should have two cases, the first case should de- clare a typed pattern for the type of the class on which you’re defining the equals method.
+* In the body of this case, write an expression that logical-ands to- gether the individual expressions that must be true for the objects to be equal.
+* Include calls to the `canEqual` method, `super.equals(that)`, write an expression that logical-ands to- gether the individual expressions that must be true for the objects to be equal.
+* For the second case of the match, write `case _ => false`.
+* For the hashcode, include in the computation all relevant fields that are relevant for the equality, multiply the 
+hash code of those fields by a prime.
+* If the equals method invokes `super.equals(that)` as part of its calculation, you should start your hashCode calculation with an invocation of `super.hashCode`.
+
+# Chapter 29: Combining Scala and Java
+As much as possible, Scala features map directly onto the equivalent Java features, others like traits has no direct 
+equivalent. 
+
+* For value types like Int, the compiler would try to transform those to int, when it is unsure like in the case of 
+`List[Any]`, it relies on the wrapper classes.
+* Singleton objects: There is no java equivalent, so the compiler uses a combination of static and instance methods. For every Scala singleton object, the compiler will create a Java class for the object with a dollar sign added to the end. The Java class also has a single static field named MODULE$ to hold the one instance of the class that is created at run time.
+* Traits creates an interface of the same name.  If you make a Scala trait that includes only abstract methods, then that trait will be translated directly to a Java interface.
+* Scala annotations (@deprecated, @volatile, @serializable) has their equivalent in java.
+* All Scala methods are translated to Java methods that declare no thrown exceptions. In the case you need to mark an
+ operation as susceptible of throwing exceptions, you can mark the method like this:
+ 
+ ```scala
+ @throws(classOf[IOException]) 
+ def read() = in.read()
+ ```
+
+* Existing annotations from Java frameworks can be used directly in Scala code. i.e. using JUNIT annotations.
+* To make an annotation that is visible to Java reflection, you must use Java notation and compile it with javac. You
+ can inspect a class annotations in scala with:
+ 
+ ```scala
+ for {
+     method <- Tests.getClass.getMethods
+     if method.getAnnotation(classOf[Ignore]) == null //getAnnotation method for searches for an specific type
+      ..
+     }
+ ```
+ 
+All Java types have a Scala equivalent. This is necessary so that Scala code can access any legal Java class. For 
+java wildcards such as `Iterator<?>`, scala uses something called existencial type. The general form of an existential type is as follows:
+
+`type forSome { declarations }`
+
+The interpretation is that the declared variables and types exist but are unknown, Scala will check that the program is sound even though the types and values in the forSome clause are unknown. To avoid initialization problems with existencial types consider the following:
+
+* When passing an existential type into a method,move type parameters from the forSome clause to type parameters of the 
+method.
+* Instead of returning an existential type from a method,return an object that has abstract members for each of the 
+types in the forSome clause.
+
+# Chapter 30: Actors and Concurrency
