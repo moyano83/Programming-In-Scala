@@ -1,5 +1,8 @@
 # This is a summary of the book Programming in Scala by Odersky, Spoon & Venners
 
+# Chapter 1: A Scalable Language
+Scala is great.
+
 # Chapter 2: First steps in Scala
 Function definitions starts with `def`, the compiler doesn't infer function parameter types, therefore they need to 
 be declared. The _Unit_ type is similar to Java's _void_. If a function literal consists of one statement that takes 
@@ -1067,7 +1070,32 @@ The interpretation is that the declared variables and types exist but are unknow
 * Instead of returning an existential type from a method,return an object that has abstract members for each of the types in the forSome clause.
 
 # Chapter 30: Actors and Concurrency
-To implement an actor, you subclass `scala.actors.Actor` and implement the act method. You can also create an actor using a utility method named actor in object `scala.actors.Actor`, The actor starts immediately when it is defined. There is no need to call a separate start method.
+To implement an actor, you subclass `scala.actors.Actor` and implement the act method. You can also create an actor using a utility method named actor in object `scala.actors.Actor` and implement its `act` method. To start an actor call the start method. It is possible to define an actor by implementing the `actor` method in the Actor class. The actor defined like this starts immediately when it is defined, there is no need to call a separate start method. You can communicate with actors by sending them messages like this: `<actor instance> ! "<The message to send>"`. To define what an actor will do, implement the `receive` or `receiveWithin(timeout)`method, passing it a function. When an actor sends a message does not block, when it receives a message, the message stays in the mailbox until the actor calls the method receive. An actor will only process messages matching one of the cases in the partial function passed to receive:
+```scala
+receive {
+  case x: Int => println("Got an Int: "+ x) //if we send an Int then the message will be processed, otherwise ignored
+}
+ ```
+ If you want to use the current thread as an actor, use the `Actor.self` method. To be more efficient with thread conservation, instead of `receive` we can use `react`. This method returns `Nothing`, it just evaluate the message handler. The message handler you pass it must now both process that message and arrange to do all of the actor’s remaining work, which is usually done by calling the `act` method of the actor again. The `Actor.loop` function executes a block of code repeatedly, even if the code calls react. for example:
+ 
+```scala
+def act() {
+  loop {
+    react {
+      case (name: String, actor: Actor) => actor ! getIp(name)
+      case msg => println("Unhandled message: " + msg)
+    }
+  } 
+}
+```
+
+Best practices writing actors:
+
+* Actors should not block: If an actor is blocked, it may not notice requests sent to it. Do not block the actor, for example call `sleep` in an auxiliary actor to avoid blocking the current one.
+* Communicate with actors only via messages: Do not call methods of the actors directly, communicate with the actors using the `!` method. Otherwise you need to lock over the methods and objects used in the direct call which is tricky.
+* Prefer immutable messages: Actor models a share-nothing architecture, the best way to ensure that message objects are thread-safe is to only use immutable objects for messages. In general, it is best to arrange your data such that every unsynchronized, mutable object is “owned,” and therefore accessed by, only one actor. 
+* Make messages self-contained: One way to simplify the logic of an actors program is to include redundant information in the messages, for example messages might have a reference to the actor that makes the call, so you can send a message back.
+
 
 # Chapter 31: Combinator Parsing
 Parsers in scala can be used to process special purpose languages with their own defined syntax. JavaTokenParsers is a trait that provides the basic machinery for writing a parser and also provides some primitive parsers that recognize some word classes: identifiers, string literals and numbers. Scala’s parsing combinators are arranged in a hierarchy of traits, which are all contained in package `scala.util.parsing.combinator`. It defines parsers like the `floatingPointNumber` which recognizes a floating point number in the format of Java. This trait extends for the regex parser `RegexParsers` (which extends from the most generic `Parsers` parser). An example of a Json parser is below:
@@ -1142,3 +1170,18 @@ That's why you can write `"("~expr~")"` because `"("` is converted to `literal("
 Many languages admit so-called “LL(1)” grammars.2 When a combinator parser is formed from such a grammar, it will never backtrack, i.e., the input position will never be reset to an earlier value. The combinator parsing framework allows you to express the expectation that a grammar is LL(1) explicitly, using a new operator ~!. This operator is like sequential composition ~ but it will never backtrack to “un-read” input elements that have already been parsed.
  
 # Chapter 32: GUI Programming
+We can create a swing application by extending the class `scala.swing.SimpleGUIApplication`, the top method is called
+ to populate the window. Relevant components are:
+
+* Frames: Contains one child component.
+* Panels: Can contain one or more child components.
+* Buttons: Can perform actions on response to an event
+* Label: Displays texts
+
+Components have properties, which can be customized by the applications. Java and Scala have fundamentally the same "publish/subscribe" approach to event handling: Components may be publishers and/or subscribers. In Scala, subscribing to an event source source is done by the call `listenTo(source)` and unsubscribe using the `deafTo(source)` method. In Scala, an event is a real object that gets sent to subscribing components much like messages are sent to actors. To have your component react to incoming events you need to add a handler to a property called reactions.
+Important properties of the components of swing are:
+
+* contents: Fixes the children of a component in the tree.
+* reactions: Defines the handlers of the component, determines how the component reacts to events.
+
+# Chapter 33: The SCells Spreadsheet
