@@ -1057,16 +1057,88 @@ equivalent.
      }
  ```
  
-All Java types have a Scala equivalent. This is necessary so that Scala code can access any legal Java class. For 
-java wildcards such as `Iterator<?>`, scala uses something called existencial type. The general form of an existential type is as follows:
+All Java types have a Scala equivalent. This is necessary so that Scala code can access any legal Java class. For java wildcards such as `Iterator<?>`, scala uses something called existencial type. The general form of an existential type is as follows:
 
 `type forSome { declarations }`
 
 The interpretation is that the declared variables and types exist but are unknown, Scala will check that the program is sound even though the types and values in the forSome clause are unknown. To avoid initialization problems with existencial types consider the following:
 
-* When passing an existential type into a method,move type parameters from the forSome clause to type parameters of the 
-method.
-* Instead of returning an existential type from a method,return an object that has abstract members for each of the 
-types in the forSome clause.
+* When passing an existential type into a method,move type parameters from the forSome clause to type parameters of the method.
+* Instead of returning an existential type from a method,return an object that has abstract members for each of the types in the forSome clause.
 
 # Chapter 30: Actors and Concurrency
+To implement an actor, you subclass `scala.actors.Actor` and implement the act method. You can also create an actor using a utility method named actor in object `scala.actors.Actor`, The actor starts immediately when it is defined. There is no need to call a separate start method.
+
+# Chapter 31: Combinator Parsing
+Parsers in scala can be used to process special purpose languages with their own defined syntax. JavaTokenParsers is a trait that provides the basic machinery for writing a parser and also provides some primitive parsers that recognize some word classes: identifiers, string literals and numbers. Scala’s parsing combinators are arranged in a hierarchy of traits, which are all contained in package `scala.util.parsing.combinator`. It defines parsers like the `floatingPointNumber` which recognizes a floating point number in the format of Java. This trait extends for the regex parser `RegexParsers` (which extends from the most generic `Parsers` parser). An example of a Json parser is below:
+
+```scala
+ import scala.util.parsing.combinator._
+  class JSON extends JavaTokenParsers {
+    def value : Parser[Any] = obj | arr |
+                              stringLiteral |
+                              floatingPointNumber |
+                              "null" | "true" | "false"
+def obj : Parser[Any] = "{"~repsep(member, ",")~"}"
+def arr : Parser[Any] = "["~repsep(value, ",")~"]"
+def member: Parser[Any] = stringLiteral~":"~value }
+```
+
+Where the `repsep` combinator parses a (possibly empty) sequence of terms that are separated by a given separator and the `~` explicit operator serves to indicate sequential composition of productions, the ~ operator produces as its result an instance of a case class with the same name. The results (productions) of the parsers has the following rules:
+
+* Each parser written as a String, returns the string itself.
+* Regular expression also returns the parsed string. 
+* A sequential composition `P~Q` returns `~(<result of P>, <result of Q>)`, `P|Q` returns  `<result of P>|<result of Q>` whichever one succeed.
+* Repetition of `P` returns a list of `<result of P>`.
+* An `Option(P)` returns an scala option with `Some(P)` if succeeds or `None` if not. 
+
+With this rules on mind, to transform the output, use the `^^` function, which has the form `P ˆˆ f`, whenever P returns with some result R, the result of `P ˆˆ f` is `f(R)` (i.e. `"true" ˆˆ (x => true) //returns a boolean true for the string "true"`). In addition to the `~` 
+case class `case class ~[+A, +B](x: A, y: B) { override def toString = "("+ x +"~"+ y +")" }`, there is also `~>` and `<~` parser combinators. `~>` keeps only the result of its right operand, whereas `<~` keeps only the result of its left operand. A typical grammar production is composed of alternatives that have a parsing part and a transformation part, for example"
+
+```scala
+def member: Parser[(String, Any)] = stringLiteral~":"~value ˆˆ{ case name~":"~value => (name, value) } //returns a 
+tuple with the parsed name and value separated by ":"
+```
+
+A parser type can be defined as : 
+
+```scala
+type Parser[T] = Input => ParseResult[T]
+``` 
+
+where `Parsed` is the trait contained in the package `scala.util.parsing.combinator.Parsers`. The type Input is:
+
+```scala
+ type Input = scala.util.parsing.input.Reader[Elem]
+ type Elem //represent individual elements
+```
+
+The parse result is defined by:
+
+```scala
+ sealed abstract class ParseResult[+T]
+ case class Success[T](result: T, in: Input) extends ParseResult[T] //The in, which refers to the input immediately following the part that the parser consumed.
+ case class Failure(msg: String, in: Input) extends ParseResult[Nothing]
+```
+
+A clause such as “id =>” immediately after the opening brace of a class template defines the identifier id as an alias for this in the class.
+Sequential composition is achieved with the method `~` defined as: `def ~ [U](q: => Parser[U]): Parser[~[T, U]]` where 
+`~[T, U]` can also be denoted as `T~U`. With this operation we can define the `<~` and `~>` as:
+
+```scala
+def <~ [U](q: => Parser[U]): Parser[T] = (p~q) ˆˆ { case x~y => x }
+def ~> [U](q: => Parser[U]): Parser[U] = (p~q) ˆˆ { case x~y => y }
+```
+
+In the methods above, we can see that the type of `q` is preceded by `=>` which means that the actual parser argument will be evaluated only when q is needed, which should only be the case after p has run. 
+The trait `RegexParser` defines the following:
+
+```scala
+  implicit def literal(s: String): Parser[String] = ...
+  implicit def regex(r: Regex): Parser[String] = ...
+```
+
+That's why you can write `"("~expr~")"` because `"("` is converted to `literal("(")` which returns a parser which method `~` is called with the argument `expr`. If a parser fails, among all failures, the one that occurred at the  latest position in the input is chosen. If there are several failure points at that latest position, the one that was visited last is chosen.
+Many languages admit so-called “LL(1)” grammars.2 When a combinator parser is formed from such a grammar, it will never backtrack, i.e., the input position will never be reset to an earlier value. The combinator parsing framework allows you to express the expectation that a grammar is LL(1) explicitly, using a new operator ~!. This operator is like sequential composition ~ but it will never backtrack to “un-read” input elements that have already been parsed.
+ 
+# Chapter 32: GUI Programming
