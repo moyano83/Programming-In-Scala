@@ -1,19 +1,31 @@
 package com.jmoyano
-import scala.util.parsing.combinator._
 
+import scala.swing._
+import scala.swing.event.ButtonClicked
 /**
-  * Created by jm186111 on 04/12/2016.
+  * Created by jm186111 on 05/12/2016.
   */
-class Chapter32 extends JavaTokenParsers {
+object Chapter32 extends SimpleSwingApplication {
+  //scala.swing.SimpleGUIApplication does not exists in the package scala.swing
+    def top = new MainFrame {
+      title = "First Swing App"
 
-  def expr: Parser[Any] = term~rep("+"~term | "-"~term)
-  def term: Parser[Any] = factor~rep("*"~factor | "/"~factor)
-  def factor: Parser[Any] = floatingPointNumber | "("~expr~")"
-}
+      val button = new Button {
+        name = "buttonText"
+        text = "Click me"
+      }
+      val label = new Label {
+        text = "No button clicks registered"
+      }
+      contents = new BoxPanel(Orientation.Vertical) {
+        contents += button
+        contents += label
+        border = Swing.EmptyBorder(30, 30, 10, 30)
+      }
 
-object Chapter32 extends Chapter32{
-  def main(args: Array[String]) {
-    println("input : "+ args(0))
-    println(parseAll(expr, args(0)))
-  }
+      listenTo(button)
+      reactions += {
+        case ButtonClicked(n) if n.name=="buttonText" => button.text = "Clicked!"; label.text = "Clicked"
+      }
+    }
 }

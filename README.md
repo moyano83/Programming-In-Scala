@@ -1183,5 +1183,3 @@ Important properties of the components of swing are:
 
 * contents: Fixes the children of a component in the tree.
 * reactions: Defines the handlers of the component, determines how the component reacts to events.
-
-# Chapter 33: The SCells Spreadsheet
