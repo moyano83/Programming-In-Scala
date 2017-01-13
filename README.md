@@ -2,43 +2,43 @@
 
 ## Table of contents:
 
-1. [Chapter 1: A Scalable Language](# Chapter 1: A Scalable Language)
-2. [Chapter 2: First steps in Scala](# Chapter 2: First steps in Scala)
-3. [Chapter 3: Next Steps in Scala](# Chapter 3: Next Steps in Scala)
-4. [Chapter 4: Classes and Objects](# Chapter 4: Classes and Objects)
-5. [Chapter 5: Basic Types and Operations](# Chapter 5: Basic Types and Operations)
-6. [Chapter 6: Functional Objects](# Chapter 6: Functional Objects)
-7. [Chapter 7: Built-In Control Structures](# Chapter 7: Built-In Control Structures)
-8. [Chapter 8: Functions and Closures](# Chapter 8: Functions and Closures)
-9. [Chapter 9: Control Abstraction](# Chapter 9: Control Abstraction)
-10. [Chapter 10: Composition and Inheritance](# Chapter 10: Composition and Inheritance)
-11. [Chapter 11: Scala's hierarchy](# Chapter 11: Scala's hierarchy)
-12. [Chapter 12: Traits](# Chapter 12: Traits)
-13. [Chapter 13: Packages and Imports](# Chapter 13: Packages and Imports)
-14. [Chapter 14: Assertions and Unit Testing](# Chapter 14: Assertions and Unit Testing)
-15. [Chapter 15: Case Classes and Pattern Matching](# Chapter 15: Case Classes and Pattern Matching)
-16. [Chapter 16: Working with Lists](# Chapter 16: Working with Lists)
-17. [Chapter 17: Collections](# Chapter 17: Collections)
-18. [Chapter 18:Stateful Objects](# Chapter 18:Stateful Objects)
-19. [Chapter 19: Type Parameterization](# Chapter 19: Type Parameterization)
-20. [Chapter 20: Abstract Members](# Chapter 20: Abstract Members)
-21. [Chapter 21: Implicit Conversions and Parameters](# Chapter 21: Implicit Conversions and Parameters)
-22. [Chapter 22: Implementing Lists](# Chapter 22: Implementing Lists)
-23. [Chapter 23: For Expressions Revisited](# Chapter 23: For Expressions Revisited)
-24. [Chapter 24: Extractors](# Chapter 24: Extractors)
-25. [Chapter 25: Annotations](# Chapter 25: Annotations)
-26. [Chapter 26: Working with XML](# Chapter 26: Working with XML)
-27. [Chapter 27: Modular Programming Using Objects](# Chapter 27: Modular Programming Using Objects)
-28. [Chapter 28: Object Equality](# Chapter 28: Object Equality)
-29. [Chapter 29: Combining Scala and Java](# Chapter 29: Combining Scala and Java)
-30. [Chapter 30: Actors and Concurrency](# Chapter 30: Actors and Concurrency)
-31. [Chapter 31: Combinator Parsing](# Chapter 31: Combinator Parsing)
-32. [Chapter 32: GUI Programming](# Chapter 32: GUI Programming)
+1. [Chapter 1: A Scalable Language](#Chapter1)
+2. [Chapter 2: First steps in Scala](#Chapter2)
+3. [Chapter 3: Next Steps in Scala](#Chapter3)
+4. [Chapter 4: Classes and Objects](#Chapter4)
+5. [Chapter 5: Basic Types and Operations](#Chapter5)
+6. [Chapter 6: Functional Objects](#Chapter6)
+7. [Chapter 7: Built-In Control Structures](#Chapter7)
+8. [Chapter 8: Functions and Closures](#Chapter8)
+9. [Chapter 9: Control Abstraction](#Chapter9)
+10. [Chapter 10: Composition and Inheritance](#Chapter10)
+11. [Chapter 11: Scala's hierarchy](#Chapter11)
+12. [Chapter 12: Traits](#Chapter12)
+13. [Chapter 13: Packages and Imports](#Chapter13)
+14. [Chapter 14: Assertions and Unit Testing](#Chapter14)
+15. [Chapter 15: Case Classes and Pattern Matching](#Chapter15)
+16. [Chapter 16: Working with Lists](#Chapter16)
+17. [Chapter 17: Collections](#Chapter17)
+18. [Chapter 18:Stateful Objects](#Chapter18)
+19. [Chapter 19: Type Parameterization](#Chapter19)
+20. [Chapter 20: Abstract Members](#Chapter20)
+21. [Chapter 21: Implicit Conversions and Parameters](#Chapter21)
+22. [Chapter 22: Implementing Lists](#Chapter22)
+23. [Chapter 23: For Expressions Revisited](#Chapter23)
+24. [Chapter 24: Extractors](#Chapter24)
+25. [Chapter 25: Annotations](#Chapter25)
+26. [Chapter 26: Working with XML](#Chapter26)
+27. [Chapter 27: Modular Programming Using Objects](#Chapter27)
+28. [Chapter 28: Object Equality](#Chapter28)
+29. [Chapter 29: Combining Scala and Java](#Chapter29)
+30. [Chapter 30: Actors and Concurrency](#Chapter30)
+31. [Chapter 31: Combinator Parsing](#Chapter31)
+32. [Chapter 32: GUI Programming](#Chapter32)
 
-# Chapter 1: A Scalable Language
+# Chapter 1: A Scalable Language<a name="Chapter1"></a>
 Scala is great.
 
-# Chapter 2: First steps in Scala
+# Chapter 2: First steps in Scala<a name="Chapter2"></a>
 Function definitions starts with `def`, the compiler doesn't infer function parameter types, therefore they need to 
 be declared. The _Unit_ type is similar to Java's _void_. If a function literal consists of one statement that takes 
 a single argument, you need not explicitly name and specify the argument:
@@ -52,7 +52,7 @@ args.foreach(x => println(x))
 If there is more than one parameter on the function literal or you define the type of the parameter, then the 
 parameter declaration needs to be enclosed by parentheses.
 
-# Chapter 3: Next Steps in Scala
+# Chapter 3: Next Steps in Scala<a name="Chapter3"></a>
 Scala transforms calls without method name like this `"hello"(i)` is transformed into `"hello".apply(i)`, but this 
 only work if the object type define the `apply` method. When an assignment is made to a variable to which parentheses
  and one or more arguments have been applied, the compiler will transform that into an invocation of an update method
@@ -66,7 +66,7 @@ Tuples are defined by enclosing values in parentheses `val tuple = (1, "Test")`,
 derived, mutable and immutable.  There is a `scala.collection.mutable.Hashset` and a `scala.collection.immutable
 .Hashset` analogous for Maps.
 
-# Chapter 4: Classes and Objects
+# Chapter 4: Classes and Objects<a name="Chapter4"></a>
 Results of type _Unit_ in a method can remove the equals symbol and return type: `def something(...){...}`, this 
 means that even if the last statement of the function has a result, it's value its converted to _Unit_ Semicolon is 
 needed if you put more than a sentence in a single line. Line ending is treated as a semicolon except:
@@ -84,7 +84,7 @@ standalone object.
 The trait _Application_ can't use command line arguments or if the program is multithread. Only used for simple and 
 single threaded programs.
 
-# Chapter 5: Basic Types and Operations
+# Chapter 5: Basic Types and Operations<a name="Chapter5"></a>
 _Boolean_, _Byte_, _Short_, _Char_, _Int_, _Long_, _Float_ and _Double_ belongs to the package _scala.lang_, _String_
  belongs to _java.lang_, and both are automatically imported into every scala source file. Scala accepts literals 
  like in java, for example for Int type we can define `val a =0X4F`, same with octal (numbers beginning with 0) or 
@@ -133,7 +133,7 @@ Associativity of the method is left to right except if the operand starts with `
 to left. For each basic type described in this chapter, there is also a “rich wrapper” that provides several 
 additional methods.
 
-# Chapter 6: Functional Objects
+# Chapter 6: Functional Objects<a name="Chapter6"></a>
 If a class doesn't define a body, there is no need to put curly braces. In Java, classes have constructors, which can 
 take parameters, whereas in Scala, classes can take parameters directly. To override a class method, put the keyword 
 _override_ before the _def_ keyword.
@@ -175,7 +175,7 @@ declaration but reachable in another part of the code). Example of implicit defi
 implicit def intToRational(x: Int) = new Rational(x)
 ```
 
-# Chapter 7: Built-In Control Structures
+# Chapter 7: Built-In Control Structures<a name="Chapter7"></a>
 Scala control structures `if`, `while`, `for`, `try` and `match` results in a value. Given this, is possible to 
 initialize a value (not a variable) like:
 
@@ -247,7 +247,7 @@ val a = 1; {
 println(a)
 ```
 
-# Chapter 8: Functions and Closures
+# Chapter 8: Functions and Closures<a name="Chapter8"></a>
 Scala allows to define functions inside functions that are only visible within those functions (like if they were 
 private):
 
@@ -340,7 +340,7 @@ recursion and replaces it with a jump back to the beginning of the function, aft
 with the new values, although this optimization can be deactivated by passing `-g:notailcalls` argument to the scala 
 shell or to the scalac compiler. Scala only optimizes directly recursive calls back to the same function making the call. 
 
-# Chapter 9: Control Abstraction
+# Chapter 9: Control Abstraction<a name="Chapter9"></a>
 Scala gives the programmer the ability to create his own control structures by the higher order functions (functions 
 that accepts other functions as parameters). An example of a higher order function in scala is below:
 
@@ -405,7 +405,7 @@ def myAssert(predicate: => Boolean) = if (assertionsEnabled && !predicate()) thr
 myAssert(5 > 3)
 ```
 
-# Chapter 10: Composition and Inheritance
+# Chapter 10: Composition and Inheritance<a name="Chapter10"></a>
 The `abstract` keyword in scala serves the same purpose than in java, although an abstract method in an abstract class 
  don't need the abstract modifier like in java. Methods with implementation are called concrete. In scala 
  _parameterless methods_ are the ones without parentheses like `def method:...`, the ones like `def method():...` are 
@@ -420,7 +420,7 @@ In scala you can use modifiers like _var, val, override, protected and private_ 
  runtime depending on the actual type of the instance. the _final_ modyfier as in Java indicates that a method can't 
  be overriden or a class can be subclassed. 
   
-# Chapter 11: Scala's hierarchy
+# Chapter 11: Scala's hierarchy<a name="Chapter11"></a>
 Every class in scala extends from `Any`, every class has `Null` and `Nothing` as subclasses. `Any` contains methods like `==`, `!=` (both final), `equals`, `hashcode` and `toString`. From `Any` there is two subclasses and one marker trait: 
 
 * `AnyVal`: For built in Values from where Byte, Short, Char, Int, Long, Float, Double, Boolean, and Unit extends, The first eight are instantiated as Java primitives and writen as literals in scala. i.e. 42 is an Int. You cannot create instances of this classes using `new` (value classes are declared final and abstract and cannot be instantiated). Implicit conversions are available from Byte to Short, from short to Int, from Char to Int from Int to Long, from Long to Float and from Float to Double. There are also implicit conversions from the classes to their 'Richer' subtypes, like from Int to RichInt, which add functionality to the classes.
@@ -438,7 +438,7 @@ def divide(x: Int, y: Int): Int =
 
 In the previous Example, `Nothing` is still an Integer, so the return type for both branches is Int.
 
-# Chapter 12: Traits
+# Chapter 12: Traits<a name="Chapter12"></a>
 Traits extends from `AnyRef`, and can define method implementations in the body. To use them, use the keyword `extends` (in this case the class inherits the trait superclass) or `with`: `class Frog extends Animal with hasTail with hasLegs {...}`. Traits in scala can declare fields and maintain state. You can do pretty much the same than a class with the exception of having class parameters like in `class square(side: Int){...}` and having not bounded superclasses like in the case of calling a `toString` method (the class would call the superclass toString that can be whichever class extends the trait). The `Ordered[T]` trait has a method `compare` which is similar to the java one. 
 If a Trait extends a class or trait, it can only be mixed into a class that extends the same class than the trait. A trait can call to a `super` method in a method declared `abstract` because the trait is bounded dynamically:
 
@@ -456,7 +456,7 @@ It is possible to have anonymous mixing classes like this: `val queue = new Basi
  * If efficiency is very important, lean towards using a class
  * If you still do not know, after considering the above, then start by making it as a trait
  
-# Chapter 13: Packages and Imports
+# Chapter 13: Packages and Imports<a name="Chapter13"></a>
 Scala allows you to place classes in different packages in the same file like this:
 
 ```scala
@@ -531,7 +531,7 @@ A class shares all its access rights with its companion object and vice versa. T
   }
 ```
  
-# Chapter 14: Assertions and Unit Testing
+# Chapter 14: Assertions and Unit Testing<a name="Chapter14"></a>
 The `assert(condition)` or `asser(condition, explanation) //explanation is returned if the assert is not true` methods throws AssertionErrors if the condition is not true, and can be used to check preconditions that needs to hold true in order to execute tests, or checks in methods.
 The `ensuring(condition)` takes one argument, a predicate function that takes a result type and returns Boolean. ensuring will pass the result to the predicate. If the predicate returns true, ensuring will return the result. Otherwise, ensuring will throw an AssertionError. Assertions (and ensuring checks) can be enabled and disabled using the JVM’s -ea and -da command-line flags.
  
@@ -589,7 +589,7 @@ class ElementSuite extends JUnit3Suite with Checkers {
 }
 ```
 
-# Chapter 15: Case Classes and Pattern Matching
+# Chapter 15: Case Classes and Pattern Matching<a name="Chapter15"></a>
 Case classes are special constructs in scala to which the language adds conveniences to the class that includes:
 
 * A factory method with the name of the class. i.e:
@@ -654,7 +654,7 @@ val results = List(Some("apple"), None, Some("orange"))
 for (Some(fruit) <- results) println(fruit) // Will print "apple" and "orange"
 ```
 
-# Chapter 16: Working with Lists
+# Chapter 16: Working with Lists<a name="Chapter16"></a>
 Lists in scala are immutable (elements cannot be reassigned), lists have a recursive structure (arrays are flat). List are covariante, this means that if T is subtype of S, then `List[T]` is a subtype of `List[S]`. All lists are build from _Nil_ (which represents the empty list) and _::_ which represent a list who's first element is the one on the left of the operator followed by the elements of the right operator. i.e we can build a list containing the first two natural numbers as `1::(2::Nil)` or `1::2::3` (concatenates to the right). All operations on Lists can be expressed in terms of the following methods defined in the List class:
 
 * head returns the first element of a list (for non empty list, Exception is thrown otherwise)
@@ -706,7 +706,7 @@ It is possible to use pattern match with list using a patter like _List(...)_ or
 * forall2: similar to the previous `List.forall2(List("abc", "de"), List(3, 2)) (_.length == _) //returns true`
 * exists2: similar to the previous `List.exists2(List("abc", "de"),List(3, 2)) (_.length != _) // returns false`
 
-# Chapter 17: Collections
+# Chapter 17: Collections<a name="Chapter17"></a>
 The main trait in scala collections is Iterable, which defines a method `def elements :Iterator[A]`. The Iterator is the mechanism to iterate the Iterable collections. An Iterator can be traversed only once. The Iterator has the methods `def hasNext:Boolean` and `def next:A`.
 The trait Seq extends from Iterable, their elements are order and can be requested (for example access the 4th element).
 
@@ -731,7 +731,7 @@ The trait Seq extends from Iterable, their elements are order and can be request
 Scala would interpret the `a+=b` method in immutable collections (which does not support this method) as `a=a+b`. I f you declare a set as a var and use a += on it, then a new collection with the element will be returned and the var pointer will be reassigned. The same applies to methods ending in `=`.
 Sometimes you may want to create a collection but specify a different type from the one the compiler would choose, this can be done by defining the type when you define the collection like in `val init=mutable.Set[Int](43)`, or adding the elements of a set to the type of set you want like in `val treeSet = TreeSet[String]() ++ colors //colors is a Set`. Initializing Lists from other collections is easier (just call toList), same for Arrays with the toArray metho, it can be slow for large collections as elements will be copied using the Iterator. You can convert a mutable collection to an immutable collection and viceversa by invoking the ++ method on an empty collection of the desired type and adding the elements of the mutable/immutable collection to it. Tuples can combine objects of different types, thus tuples do not inherit from Iterable. 
 
-# Chapter 18:Stateful Objects
+# Chapter 18:Stateful Objects<a name="Chapter18"></a>
 In scala, every reassignable var that is a non private member of a class gets a setter (`x_=` being x the name of the var) and a getter (just `x`). The getters and setters generated has the same visibility than the original var. In addition, you can also choose to define a getter and a setter directly instead of defining a var, for example:
 
 ```scala
@@ -746,7 +746,7 @@ class Time {
 
 To initialize a field with a zero value that will depend on the field's type, we can use `= _`. You can define a _type member_ inside a class with the keyword *type* followed by the definition. For example `type Action = () => Boolean` defines a type Action that is a parameterless function that returns a boolean.
 
-# Chapter 19: Type Parameterization
+# Chapter 19: Type Parameterization<a name="Chapter19"></a>
 In Scala it is possible to hide the primary constructor by adding a private modifier in front of the class parameter list: `class Test private (...){//body}`.
 This constructor can be accessed only from within the class itself and its companion object. A class can also be hided and only export a trait that reveals the public interface of the class, like `private class <name> ...`. A parameterized type is called a type constructor because with it you can construct a type by specifying a type parameter (for example a parameterized trait `Example` is a type constructor that can construct different types such as `Example[String]`, `Example[Int]`...). In Scala, generic types have by default nonvariant (or, “rigid”) subtyping, thus you can't pass a `Example[T]` to a method that needs a `Example[F]` being T subtype of F. This behaviour can be changed if you define the class like `Example[+F]`. Prefixing a formal type parameter with a + indicates that subtyping is covariant (flexible) in that parameter. If instead you define the class like `Example[-T]`, means that the class is contravariant subtyped, meaning that if T is a subtype of type S, this would imply that `Example[S]` is a subtype of `Example[T]`. For example contravariance in a function passed as a parameter makes sense as any operation defined in that function would be accessible by a subtype of it. 
 Scala treats arrays as nonvariant, so as opposite with java, you would have to cast an array of one type to its supertype using the `asInstanceOf[type]` method. It is possible to give a method a lower bound for a type parameter, for example given the example below, the type `U` is a supertype of the type `T`: 
@@ -759,7 +759,7 @@ def method[U >: T](x: U) = {...} //Accepts a type T or any of its supertypes
 
 An upper bound, specified as `<:` for example in a method like `def getSortedList[T<:Ordered[T]](..)` you are specifying that `T` has to be a subtype of `Ordered[T]`.
 
-# Chapter 20: Abstract Members
+# Chapter 20: Abstract Members<a name="Chapter20"></a>
 Type of Abstract members of a class:
 
 * Abstract type: type declared to be a member of a class or trait, without specifying a definition.
@@ -803,7 +803,7 @@ val Green = Value // also val Red, Green = Value will work
 Enumeration defines an inner class named Value, and the same named parameterless Value method returns a fresh instance of that class. In the above example `Red` and `Green` types are `Color.Value`. In scala, inner objects are referenced like `Outer#Inner`, the '.' is reserved for path-dependent types.
 You can neither create an instance of an abstract type, nor have an abstract type as a supertype of another class.
 
-# Chapter 21: Implicit Conversions and Parameters
+# Chapter 21: Implicit Conversions and Parameters<a name="Chapter21"></a>
 Implicit conversions are normal methods prepended with the `implicit` modifier, the compiler will try to insert an implicit to fix a type error. Implicit conversions are governed by the following general rules:
 
 * Marking Rule: Only definitions marked implicit are available. You can mark a variable, function, or object definition with the `implicit` keyword, and only those definitions marked with `implicit` will be tried to fix type errors.
@@ -838,7 +838,7 @@ Implicit parameters are not usually called by name in the code of the methods, t
  
 When debugging implicits, if the compiler doesn't find an implicit, write the conversion explicitly to see if that indicates an Error (i.e. `val chars:List[Char] = str2CharList("abc")`). In this case the compiler might tell you the return type is wrong, or if the error goes away might be due to an scope problem. Also the `-Xprint:typer` option to the compiler displays useful information about the implicits used.
 
-# Chapter 22: Implementing Lists
+# Chapter 22: Implementing Lists<a name="Chapter22"></a>
 List is an abstract class in the package scala with two subclasses for :: and Nil. The class List is defined as `abstract class List[+T]` which means is covariant, so you can assign a `List[Int]` to a `List[Any]`. The list class defines three abstract methods:
 ```scala
 def isEmpty: Boolean
@@ -874,7 +874,7 @@ def :::[U >: T](prefix: List[U]): List[U] =
 
 List buffers let you accumulate the elements of a list. To do this, you use an operation such as “buf += elem”, which appends the element elem at the end of the list buffer buf. After appending all elements, you can create a list by calling the `toList` method of the list buffer. ListBuffer is a class in package scala.collection.mutable. (+=) and the `toList` method of list buffer takes constant time. In scala lists, you can either construct lists incrementally by adding elements to the beginning of a list using ::, or you use a list buffer for adding elements to the end.
 
-# Chapter 23: For Expressions Revisited
+# Chapter 23: For Expressions Revisited<a name="Chapter23"></a>
 All for expressions that yield a result are translated by the compiler into combinations of invocations of the higher-order methods map, flatMap, and filter. All for loops without yield are translated into a smaller set of higher-order functions: just filter and foreach. A for sequence is composed of:
  
 * Generators: Of the form `pat <- expr` where `expr` typically returns a list, and pat is a pattern to match with. Every for expression starts with a generator. If there are several genera- tors in a for expression, later generators vary more rapidly than earlier ones.
@@ -892,7 +892,7 @@ Every for expression can be translated in terms of the three higher-order functi
 
 In the same sense, the operations map, flatmap and filter can be implemented it for. To support the full range of for expressions and for loops, you need to define map, flatMap, filter, and foreach as methods of your data type. 
 
-# Chapter 24: Extractors
+# Chapter 24: Extractors<a name="Chapter24"></a>
 Scala extractors let you define new patterns for preexisting types, where the pattern need not follow the internal representation of the type. An extractor in Scala is an object that has a method called unapply as one of its members. `unapply` match a value and take it apart.
  
  ```scala
@@ -937,7 +937,7 @@ Every regular expression in Scala defines an extractor. The extractor is used to
  `val Decimal(sign, integerpart, decimalpart) = "1.0" //matches sign=null, integerpart="1", decimalpart=".0"`
 You can use regex in for loops like this: `for (Decimal(s, i, d) <- Decimal findAllIn input)`
 
-# Chapter 25: Annotations
+# Chapter 25: Annotations<a name="Chapter25"></a>
 A tool that uses annotations (called meta-programming tool), can use annotations to perform different routines such as pretty printing, formatting... Annotations are of the form `@Annotation [val|var|def|class|object|trait|type] ...` and applies to the entire declaration of what follows it. They can apply to expressions as in `(e: @unchecked) match {...}`, and they can take arguments `@serial(1234) SomeClass`. 
 Some Standard annotations in scala:
 
@@ -949,7 +949,7 @@ Some Standard annotations in scala:
 * @scala.reflect.BeanProperty: If you add this annotation to a field, the compiler will automatically generate get and set methods for you. The generated get and set methods are only available after a compilation pass completes, you cannot call these get and set methods from code you compile at the same time as the annotated fields.
 * @unchecked: It tells the compiler not to worry if the match expression in a pattern match seems to leave out some cases.
 
-# Chapter 26: Working with XML
+# Chapter 26: Working with XML<a name="Chapter26"></a>
 Scala lets you type in XML as a literal anywhere that an expression is valid. The resul would be of type `scala.xml
 .Elem`, other important classes in xml are:
 
@@ -1007,7 +1007,7 @@ If you want to match any sequence of nodes inside a pattern, the pattern for “
     }
 ```
 
-# Chapter 27: Modular Programming Using Objects
+# Chapter 27: Modular Programming Using Objects<a name="Chapter27"></a>
 Programs can be divided into singleton objects, which you can think of as modules:  if a module is an object, then a template for a module is a class. Abstract classes can help to modularize the code by provide common code implementation while allowing the developer to define an specialization of some methods or properties inside the classes that extends from it.
 Scala provides the _self type_ for the situation where a trait is located in a different trait from the one that uses it, so it is out of scope. Technically, a self type is an assumed type for this whea  never this is mentioned within the class. If you have a trait that is only ever used when mixed in with another trait or traits, then you can specify that those other traits should be assumed. For example:
 
@@ -1026,7 +1026,7 @@ the problem using singleton types, which are defined like this `val someVal: exa
 the end means that this is a singleton type.  A singleton type is extremely specific and holds only one object, in 
 this case, whichever object is referred to by _example_.
 
-# Chapter 28: Object Equality
+# Chapter 28: Object Equality<a name="Chapter28"></a>
 In Scala, object equality is tested with `==` and reference equality with `eq`. By default, `==` in Scala is 
 inherited from the class `Any`, which defines the `equals` method with reference equality, therefore `==` is the same
  than `eq`. Some of the common pitfalls when implementing the equals method are:
@@ -1066,7 +1066,7 @@ Some advices to write a correct implementation of the equals method:
 hash code of those fields by a prime.
 * If the equals method invokes `super.equals(that)` as part of its calculation, you should start your hashCode calculation with an invocation of `super.hashCode`.
 
-# Chapter 29: Combining Scala and Java
+# Chapter 29: Combining Scala and Java<a name="Chapter29"></a>
 As much as possible, Scala features map directly onto the equivalent Java features, others like traits has no direct 
 equivalent. 
 
@@ -1104,7 +1104,7 @@ The interpretation is that the declared variables and types exist but are unknow
 * When passing an existential type into a method,move type parameters from the forSome clause to type parameters of the method.
 * Instead of returning an existential type from a method,return an object that has abstract members for each of the types in the forSome clause.
 
-# Chapter 30: Actors and Concurrency
+# Chapter 30: Actors and Concurrency<a name="Chapter30"></a>
 To implement an actor, you subclass `scala.actors.Actor` and implement the act method. You can also create an actor using a utility method named actor in object `scala.actors.Actor` and implement its `act` method. To start an actor call the start method. It is possible to define an actor by implementing the `actor` method in the Actor class. The actor defined like this starts immediately when it is defined, there is no need to call a separate start method. You can communicate with actors by sending them messages like this: `<actor instance> ! "<The message to send>"`. To define what an actor will do, implement the `receive` or `receiveWithin(timeout)`method, passing it a function. When an actor sends a message does not block, when it receives a message, the message stays in the mailbox until the actor calls the method receive. An actor will only process messages matching one of the cases in the partial function passed to receive:
 ```scala
 receive {
@@ -1132,7 +1132,7 @@ Best practices writing actors:
 * Make messages self-contained: One way to simplify the logic of an actors program is to include redundant information in the messages, for example messages might have a reference to the actor that makes the call, so you can send a message back.
 
 
-# Chapter 31: Combinator Parsing
+# Chapter 31: Combinator Parsing<a name="Chapter31"></a>
 Parsers in scala can be used to process special purpose languages with their own defined syntax. JavaTokenParsers is a trait that provides the basic machinery for writing a parser and also provides some primitive parsers that recognize some word classes: identifiers, string literals and numbers. Scala’s parsing combinators are arranged in a hierarchy of traits, which are all contained in package `scala.util.parsing.combinator`. It defines parsers like the `floatingPointNumber` which recognizes a floating point number in the format of Java. This trait extends for the regex parser `RegexParsers` (which extends from the most generic `Parsers` parser). An example of a Json parser is below:
 
 ```scala
@@ -1204,7 +1204,7 @@ The trait `RegexParser` defines the following:
 That's why you can write `"("~expr~")"` because `"("` is converted to `literal("(")` which returns a parser which method `~` is called with the argument `expr`. If a parser fails, among all failures, the one that occurred at the  latest position in the input is chosen. If there are several failure points at that latest position, the one that was visited last is chosen.
 Many languages admit so-called “LL(1)” grammars.2 When a combinator parser is formed from such a grammar, it will never backtrack, i.e., the input position will never be reset to an earlier value. The combinator parsing framework allows you to express the expectation that a grammar is LL(1) explicitly, using a new operator ~!. This operator is like sequential composition ~ but it will never backtrack to “un-read” input elements that have already been parsed.
  
-# Chapter 32: GUI Programming
+# Chapter 32: GUI Programming<a name="Chapter32"></a>
 We can create a swing application by extending the class `scala.swing.SimpleGUIApplication`, the top method is called
  to populate the window. Relevant components are:
 
