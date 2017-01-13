@@ -1,5 +1,40 @@
 # This is a summary of the book Programming in Scala by Odersky, Spoon & Venners
 
+## Table of contents:
+
+1. [Chapter 1: A Scalable Language](# Chapter 1: A Scalable Language)
+2. [Chapter 2: First steps in Scala](# Chapter 2: First steps in Scala)
+3. [Chapter 3: Next Steps in Scala](# Chapter 3: Next Steps in Scala)
+4. [Chapter 4: Classes and Objects](# Chapter 4: Classes and Objects)
+5. [Chapter 5: Basic Types and Operations](# Chapter 5: Basic Types and Operations)
+6. [Chapter 6: Functional Objects](# Chapter 6: Functional Objects)
+7. [Chapter 7: Built-In Control Structures](# Chapter 7: Built-In Control Structures)
+8. [Chapter 8: Functions and Closures](# Chapter 8: Functions and Closures)
+9. [Chapter 9: Control Abstraction](# Chapter 9: Control Abstraction)
+10. [Chapter 10: Composition and Inheritance](# Chapter 10: Composition and Inheritance)
+11. [Chapter 11: Scala's hierarchy](# Chapter 11: Scala's hierarchy)
+12. [Chapter 12: Traits](# Chapter 12: Traits)
+13. [Chapter 13: Packages and Imports](# Chapter 13: Packages and Imports)
+14. [Chapter 14: Assertions and Unit Testing](# Chapter 14: Assertions and Unit Testing)
+15. [Chapter 15: Case Classes and Pattern Matching](# Chapter 15: Case Classes and Pattern Matching)
+16. [Chapter 16: Working with Lists](# Chapter 16: Working with Lists)
+17. [Chapter 17: Collections](# Chapter 17: Collections)
+18. [Chapter 18:Stateful Objects](# Chapter 18:Stateful Objects)
+19. [Chapter 19: Type Parameterization](# Chapter 19: Type Parameterization)
+20. [Chapter 20: Abstract Members](# Chapter 20: Abstract Members)
+21. [Chapter 21: Implicit Conversions and Parameters](# Chapter 21: Implicit Conversions and Parameters)
+22. [Chapter 22: Implementing Lists](# Chapter 22: Implementing Lists)
+23. [Chapter 23: For Expressions Revisited](# Chapter 23: For Expressions Revisited)
+24. [Chapter 24: Extractors](# Chapter 24: Extractors)
+25. [Chapter 25: Annotations](# Chapter 25: Annotations)
+26. [Chapter 26: Working with XML](# Chapter 26: Working with XML)
+27. [Chapter 27: Modular Programming Using Objects](# Chapter 27: Modular Programming Using Objects)
+28. [Chapter 28: Object Equality](# Chapter 28: Object Equality)
+29. [Chapter 29: Combining Scala and Java](# Chapter 29: Combining Scala and Java)
+30. [Chapter 30: Actors and Concurrency](# Chapter 30: Actors and Concurrency)
+31. [Chapter 31: Combinator Parsing](# Chapter 31: Combinator Parsing)
+32. [Chapter 32: GUI Programming](# Chapter 32: GUI Programming)
+
 # Chapter 1: A Scalable Language
 Scala is great.
 
